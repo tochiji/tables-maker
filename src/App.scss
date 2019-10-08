@@ -45,6 +45,10 @@
   td:focus{
     outline:none;
   }
+
+  td.select{
+    width: 80px;
+  }
 }
 
 .App-addrow{

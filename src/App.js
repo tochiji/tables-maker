@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import shortid from 'shortid'
 import './App.scss'
-import { items } from './definition'
+import { items, columnTypes } from './definition'
 import { save, load } from './save'
 
 function cleanPaste(e) {
@@ -20,11 +20,18 @@ function Cell(prop) {
   const updateCell = e => {
     const node = e.target.nodeName
     const type = e.target.type
+    const name = e.target.name
+    console.log(name)
+
     const newtable = table.map(v => {
-      if (v.id === rowid && node === 'TD') {
+      const isSameId = v.id === rowid
+
+      if (isSameId && node === 'TD') {
         v.data[itemid] = e.target.innerHTML
-      } else if (v.id === rowid && type === 'checkbox') {
+      } else if (isSameId && type === 'checkbox') {
         v.data[itemid] = e.target.checked
+      } else if (isSameId && name === 'column-type') {
+        v.data[itemid] = e.target.value
       }
       return v
     })
@@ -36,6 +43,18 @@ function Cell(prop) {
     return (
       <td>
         <input type="checkbox" checked={prop.content || false} onChange={e => updateCell(e)} />
+      </td>
+    )
+  } else if (type === 'type-select') {
+    return (
+      <td className="select">
+        <select name="column-type" value={prop.content} onChange={e => updateCell(e)}>
+          {columnTypes.map(v => (
+            <option key={v.id} value={v.id}>
+              {v.name}
+            </option>
+          ))}
+        </select>
       </td>
     )
   } else {
@@ -52,14 +71,7 @@ function Row(prop) {
   return (
     <tr>
       {items.map((item, i) => (
-        <Cell
-          key={item.id}
-          rowid={prop.rowid}
-          itemid={item.id}
-          type={item.type}
-          content={r[item.id]}
-          {...prop}
-        />
+        <Cell key={item.id} rowid={prop.rowid} itemid={item.id} type={item.type} content={r[item.id]} {...prop} />
       ))}
     </tr>
   )
