@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import shortid from 'shortid'
 import './App.scss'
 import { items } from './definition'
+import { save, load } from './save'
 
 function cleanPaste(e) {
   e.preventDefault()
@@ -18,29 +19,28 @@ function Cell(prop) {
 
   const updateCell = e => {
     const node = e.target.nodeName
+    const type = e.target.type
     const newtable = table.map(v => {
-      if (v.id === rowid || node === 'TD') {
+      if (v.id === rowid && node === 'TD') {
         v.data[itemid] = e.target.innerHTML
-        return v
-      } else if (v.id === rowid || node === 'INPUT') {
-        v.data[itemid] = e.target.value
-        return v
-      } else {
-        return v
+      } else if (v.id === rowid && type === 'checkbox') {
+        v.data[itemid] = e.target.checked
       }
+      return v
     })
     setTable(newtable)
+    save(newtable)
   }
 
   if (type === 'bool') {
     return (
       <td>
-        <input type="checkbox" value={prop.content || false} onChange={e => updateCell(e)} />
+        <input type="checkbox" checked={prop.content || false} onChange={e => updateCell(e)} />
       </td>
     )
   } else {
     return (
-      <td contentEditable={true} onPaste={cleanPaste} onBlur={e => updateCell(e)}>
+      <td suppressContentEditableWarning={true} contentEditable={true} onPaste={cleanPaste} onBlur={e => updateCell(e)}>
         {prop.content}
       </td>
     )
@@ -48,7 +48,7 @@ function Cell(prop) {
 }
 
 function Row(prop) {
-  const r = prop.data
+  const r = prop.row.data
   return (
     <tr>
       {items.map((item, i) => (
@@ -57,7 +57,7 @@ function Row(prop) {
           rowid={prop.rowid}
           itemid={item.id}
           type={item.type}
-          content={r[item.id] || null}
+          content={r[item.id]}
           {...prop}
         />
       ))}
@@ -69,7 +69,7 @@ function Rows(prop) {
   return (
     <tbody>
       {prop.table.map(r => (
-        <Row key={r.id} rowid={r.id} data={r} {...prop} />
+        <Row key={r.id} rowid={r.id} row={r} {...prop} />
       ))}
     </tbody>
   )
@@ -92,6 +92,8 @@ function NewLineAdd(prop) {
     const r = prop.table.slice()
     r.push({ id: shortid.generate(), data: {} })
     prop.setTable(r)
+    console.log(r)
+    save(r)
   }
 
   return (
@@ -106,7 +108,8 @@ function NewLineAdd(prop) {
 }
 
 function App() {
-  const [table, setTable] = useState([])
+  const saved = load() || []
+  const [table, setTable] = useState(saved)
   const prop = {
     table: table,
     setTable: setTable,
