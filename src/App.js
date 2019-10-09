@@ -1,78 +1,37 @@
 import React, { useState } from 'react'
 import shortid from 'shortid'
 import './App.scss'
-import { items, columnTypes } from './definition'
+import { items } from './definition'
 import { save, load } from './save'
+import { CellBool, CellTypeSelect ,CellText } from './cells'
 
-function cleanPaste(e) {
-  e.preventDefault()
-  var text = (e.originalEvent || e).clipboardData.getData('text/plain')
-  document.execCommand('insertHTML', false, text)
-}
 
 function Cell(prop) {
-  const type = prop.type
-  const itemid = prop.itemid
-  const rowid = prop.rowid
-  const table = prop.table.slice()
-  const setTable = prop.setTable
-
-  const updateCell = e => {
-    const node = e.target.nodeName
-    const type = e.target.type
-    const name = e.target.name
-    console.log(name)
-
-    const newtable = table.map(v => {
-      const isSameId = v.id === rowid
-
-      if (isSameId && node === 'TD') {
-        v.data[itemid] = e.target.innerHTML
-      } else if (isSameId && type === 'checkbox') {
-        v.data[itemid] = e.target.checked
-      } else if (isSameId && name === 'column-type') {
-        v.data[itemid] = e.target.value
-      }
-      return v
-    })
-    setTable(newtable)
-    save(newtable)
-  }
-
-  if (type === 'bool') {
-    return (
-      <td>
-        <input type="checkbox" checked={prop.content || false} onChange={e => updateCell(e)} />
-      </td>
-    )
-  } else if (type === 'type-select') {
-    return (
-      <td className="select">
-        <select name="column-type" value={prop.content} onChange={e => updateCell(e)}>
-          {columnTypes.map(v => (
-            <option key={v.id} value={v.id}>
-              {v.name}
-            </option>
-          ))}
-        </select>
-      </td>
-    )
+  if (prop.type === 'bool') {
+    return <CellBool {...prop} />
+  } else if (prop.type === 'type-select') {
+    return <CellTypeSelect {...prop} />
   } else {
-    return (
-      <td suppressContentEditableWarning={true} contentEditable={true} onPaste={cleanPaste} onBlur={e => updateCell(e)}>
-        {prop.content}
-      </td>
-    )
+    return <CellText {...prop} />
   }
 }
 
 function Row(prop) {
+  const del = () => {
+    const table = prop.table.slice()
+    const newtable = table.filter(r =>{
+      return r.id !== prop.rowid
+    })
+    prop.setTable(newtable)
+  }
   const r = prop.row.data
   return (
     <tr>
+      <td>{prop.rowNo}</td>
       {items.map((item, i) => (
         <Cell key={item.id} rowid={prop.rowid} itemid={item.id} type={item.type} content={r[item.id]} {...prop} />
       ))}
+      <td className="del" onClick={del}>del</td>
     </tr>
   )
 }
@@ -80,8 +39,8 @@ function Row(prop) {
 function Rows(prop) {
   return (
     <tbody>
-      {prop.table.map(r => (
-        <Row key={r.id} rowid={r.id} row={r} {...prop} />
+      {prop.table.map((r, i) => (
+        <Row key={r.id} rowid={r.id} rowNo={i+1} row={r} {...prop} />
       ))}
     </tbody>
   )
@@ -91,9 +50,11 @@ function Header(prop) {
   return (
     <thead>
       <tr>
+        <th>No</th>
         {items.map(v => (
           <th key={v.id}>{v.name}</th>
         ))}
+        <th className="del" />
       </tr>
     </thead>
   )
@@ -111,7 +72,7 @@ function NewLineAdd(prop) {
   return (
     <tfoot className="App-addrow">
       <tr>
-        <td colSpan={items.length} onClick={addRow}>
+        <td colSpan={items.length + 1} onClick={addRow}>
           ここをクリックしてね
         </td>
       </tr>
@@ -135,6 +96,19 @@ function App() {
         <Rows {...prop} />
         <NewLineAdd {...prop} />
       </table>
+      <Info table={table} />
+    </div>
+  )
+}
+
+function Info(prop) {
+  const PKcount = prop.table.filter(v => {
+    return v.data.ispk
+  }).length
+  return (
+    <div>
+      <div>{prop.table.length + '行あるよ'}</div>
+      <div>{'PKは' + PKcount + '個あるよ'}</div>
     </div>
   )
 }

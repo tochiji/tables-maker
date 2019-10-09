@@ -49,6 +49,13 @@
   td.select{
     width: 80px;
   }
+
+  td.del{
+    cursor:pointer;
+  }
+  .del{
+    border:none;
+  }
 }
 
 .App-addrow{
