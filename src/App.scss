@@ -1,4 +1,5 @@
 .App {
+  max-width: 1200px;
   margin: 10px 2%;
   text-align: center;
   display: flex;
@@ -24,15 +25,16 @@
   th{
     margin:0;
     padding:0;
-    height: 3rem;
+    height: 2rem;
     max-width: 100px;
+    border-right: 1px solid #c7c7c7;
   }
 
-  th,td{
+  td{
     margin:0;
     padding:2px 0;
     border: 1px solid #c7c7c7;
-    height: 1.5rem;
+    height: 2.0rem;
 
     &:hover{
       background-color: rgb(255, 240, 240);
