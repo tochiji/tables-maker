@@ -1,5 +1,5 @@
 const items = [
-  { id: 'name', name: 'カラム名', type: 'text' },
+  // { id: 'name', name: 'カラム名', type: 'text' },
   { id: 'logicName', name: '論理名', type: 'alphabet' },
   { id: 'type', name: '型', type: 'type-select' },
   { id: 'supplementation', name: '補足', type: 'textarea' },
