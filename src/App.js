@@ -6,7 +6,7 @@ import './App.scss'
 import { items } from './definition'
 import { save, load } from './save'
 import DnDTypes from './DnDTypes'
-import { CellBool, CellTypeSelect, CellText } from './cells'
+import { CellBool, CellTypeSelect, CellText } from './Cells'
 
 function App() {
   const saved = load() || []
@@ -123,7 +123,7 @@ function Row(prop) {
       {items.map((item, i) => (
         <Cell key={item.id} rowid={prop.rowid} itemid={item.id} type={item.type} content={r[item.id]} {...prop} />
       ))}
-      <td className="del" onClick={del} style={{ visibility: isDragging ? "hidden" : "display" }}>
+      <td className="del" onClick={del} style={{ visibility: isDragging ? "hidden" : "visible" }}>
         del
       </td>
     </tr>
