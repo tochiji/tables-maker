@@ -1,4 +1,4 @@
-.App {
+.Table {
   max-width: 1200px;
   margin: 10px 2%;
   text-align: center;
@@ -8,7 +8,7 @@
   align-items: center;
 }
 
-.App-title{
+.Table-title{
   width:100%;
   text-align: left;
   margin: 10px 0;
@@ -17,7 +17,7 @@
 }
 
 
-.App-table{
+.Table-content{
   width: 100%;
   font-size: 0.8rem;
   border-collapse: collapse;
