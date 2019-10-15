@@ -1,6 +1,5 @@
 import React from 'react'
 import { columnTypes } from './definition'
-import { save } from './save'
 
 function cleanPaste(e) {
   e.preventDefault()
@@ -8,25 +7,23 @@ function cleanPaste(e) {
   document.execCommand('insertHTML', false, text)
 }
 
-function updateCell(prop, e, targetProperty) {
-  const table = prop.table.slice()
-  const newtable = table.map(v => {
-    if (v.id === prop.rowid) {
-      v.data[prop.itemid] = e.target[targetProperty]
+function updateCell(props, e, targetProperty) {
+  const columns = props.columns.slice()
+  const newColumns = columns.map(v => {
+    if (v.id === props.rowid) {
+      v.data[props.itemid] = e.target[targetProperty]
     }
     return v
   })
-  prop.setTable(newtable)
-  save(newtable)
+  props.setColumns(newColumns)
 }
 
-
-function CellBool(prop) {
+function CellBool(props) {
   const targetProperty = 'checked'
 
   return (
     <td>
-      <input type="checkbox" checked={prop.content || false} onChange={e => updateCell(prop, e, targetProperty)} />
+      <input type="checkbox" checked={props.content || false} onChange={e => updateCell(props, e, targetProperty)} />
     </td>
   )
 }
