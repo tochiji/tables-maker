@@ -6,7 +6,8 @@ import shortid from 'shortid'
 import { items } from './definition'
 import { saveProjects } from './save'
 import DnDTypes from './DnDTypes'
-import { CellBool, CellTypeSelect, CellText } from './Cells'
+import Title from './Title'
+import { CellBool, CellTypeSelect, CellText } from './Cells.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import './Table.scss'
@@ -37,10 +38,11 @@ function Table(props) {
 
   return (
     <div className="Table">
+      <Title />
       <DndProvider backend={HTML5Backend}>
         <div className="Table-title">
-          <Link style={{ textDecoration: 'none' }} to="/">
-            テーブル設計サイト
+          <Link style={{ textDecoration: 'none' }} to={`/${projectId}`}>
+            {table.name}
           </Link>
         </div>
         <table className="Table-content">

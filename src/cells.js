@@ -1,5 +1,5 @@
 import React from 'react'
-import { columnTypes } from './definition'
+import { columnTypes } from './definition' 
 
 function cleanPaste(e) {
   e.preventDefault()

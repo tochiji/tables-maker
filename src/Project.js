@@ -2,6 +2,8 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import shortid from 'shortid'
 import { saveProjects } from './save'
+import Title from './Title'
+import './Project.scss'
 
 const Project = props => {
   const { projects, setProjects } = props
@@ -17,7 +19,7 @@ const Project = props => {
     pjs[index].tables.push({
       id: shortid.generate(),
       name: name,
-      columns: []
+      columns: [],
     })
     setProjects(pjs)
     saveProjects(pjs)
@@ -25,22 +27,31 @@ const Project = props => {
 
   return (
     <div className="Project">
-      <div>{project.name}</div>
-      <ul>
-        {project.tables.map(v => (
-          <li key={v.id}>
-            <Link to={`${projectId}/${v.id}`}>{v.name}</Link>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <form>
-          新規テーブル名：
-          <input id="new-table" />
-          <button type="button" onClick={addNewTable}>
-            プロジェクトを追加
-          </button>
-        </form>
+      <Title />
+      <div className="Project-content">
+        <Link className="Project-title" to="/">
+          {project.name}
+        </Link>
+        <div className="table-list">テーブル一覧</div>
+        <ul>
+          {project.tables.map(v => (
+            <li key={v.id}>
+              <Link to={`${projectId}/${v.id}`}>
+                <span>{v.name}</span>
+                <span>{v.columns.length}個のカラムがあります</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div>
+          <form>
+            新規テーブル名：
+            <input id="new-table" autoComplete="off" />
+            <button type="button" onClick={addNewTable}>
+              プロジェクトを追加
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
