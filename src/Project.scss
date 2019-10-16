@@ -46,6 +46,7 @@
     }
 
     &:hover {
+      transform: translate(-1px,-1px);
       box-shadow: 2px 2px 5px rgb(221, 221, 221);
     }
   }
@@ -56,7 +57,26 @@
 
   span+span{
     margin-left: 20px;
+  }
+
+  .column-count{
     color: rgb(160, 160, 160);
+  }
+
+  form{
+    width: 90%;
+    margin-top: 15px;
+  }
+  input{
+    width: 100%;
+    margin-top: 10px;
+    height: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ff7300;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid rgb(202, 202, 202);
   }
 }
 

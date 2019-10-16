@@ -4,6 +4,8 @@ import shortid from 'shortid'
 import { saveProjects } from './save'
 import Title from './Title'
 import './Project.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTable } from '@fortawesome/free-solid-svg-icons'
 
 const Project = props => {
   const { projects, setProjects } = props
@@ -37,21 +39,22 @@ const Project = props => {
           {project.tables.map(v => (
             <li key={v.id}>
               <Link to={`${projectId}/${v.id}`}>
+                <span>
+                  <FontAwesomeIcon className="table-icon" icon={faTable} />
+                </span>
                 <span>{v.name}</span>
-                <span>{v.columns.length}個のカラムがあります</span>
+                <span className="column-count">{v.columns.length}つのカラムがあります</span>
               </Link>
             </li>
           ))}
         </ul>
-        <div>
-          <form>
-            新規テーブル名：
-            <input id="new-table" autoComplete="off" />
-            <button type="button" onClick={addNewTable}>
-              プロジェクトを追加
-            </button>
-          </form>
-        </div>
+        <form>
+          新規テーブル名
+          <input id="new-table" autoComplete="off" />
+          <button type="button" onClick={addNewTable}>
+            テーブルを追加
+          </button>
+        </form>
       </div>
     </div>
   )

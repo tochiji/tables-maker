@@ -1,4 +1,7 @@
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTable } from '@fortawesome/free-solid-svg-icons'
+
 
 function Title() {
   const style = {
@@ -19,7 +22,8 @@ function Title() {
 
   return (
     <div className="Home-title" style={style}>
-      <span>Table Maker</span>
+      <FontAwesomeIcon style={{"color": "#777" ,"transform": "transitionY(1px)"}} icon={faTable} />
+      <span style={{"cursor": "default","padding-left": "8px"}}>Table Maker</span>
     </div>
   )
 }
