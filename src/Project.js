@@ -12,7 +12,8 @@ const Project = props => {
   const { projectId } = useParams()
   const project = find(projects, projectId)
 
-  const addNewTable = () => {
+  const addNewTable = e => {
+    e.preventDefault()
     const name = document.getElementById('new-table').value
     if (name === '') return
     const pjs = projects.slice()
@@ -25,6 +26,7 @@ const Project = props => {
     })
     setProjects(pjs)
     saveProjects(pjs)
+    document.getElementById('new-table').value = ""
   }
 
   return (
