@@ -22,18 +22,18 @@ function CellBool(props) {
   const targetProperty = 'checked'
 
   return (
-    <td>
+    <td style={props.style}>
       <input type="checkbox" checked={props.content || false} onChange={e => updateCell(props, e, targetProperty)} />
     </td>
   )
 }
 
-function CellTypeSelect(prop) {
+function CellTypeSelect(props) {
   const targetProperty = 'value'
 
   return (
-    <td className="select">
-      <select name="column-type" value={prop.content} onChange={e => updateCell(prop, e, targetProperty)}>
+    <td className="select" style={props.style}>
+      <select name="column-type" value={props.content} onChange={e => updateCell(props, e, targetProperty)}>
         {columnTypes.map(v => (
           <option key={v.id} value={v.id}>
             {v.name}
@@ -44,7 +44,7 @@ function CellTypeSelect(prop) {
   )
 }
 
-function CellText(prop) {
+function CellTextArea(props) {
   const targetProperty = 'innerHTML'
 
   return (
@@ -52,12 +52,31 @@ function CellText(prop) {
       suppressContentEditableWarning={true}
       contentEditable={true}
       dangerouslySetInnerHTML={{
-        __html: prop.content,
+        __html: props.content,
       }}
       onPaste={cleanPaste}
-      onBlur={e => updateCell(prop, e, targetProperty)}
+      onBlur={e => updateCell(props, e, targetProperty)}
+      style={{"textAlign": "left", "padding": "3px", ...props.style}}
     />
   )
 }
 
-export { CellBool, CellTypeSelect, CellText }
+
+function CellText(props) {
+  const targetProperty = 'innerHTML'
+
+  return (
+    <td
+      suppressContentEditableWarning={true}
+      contentEditable={true}
+      dangerouslySetInnerHTML={{
+        __html: props.content,
+      }}
+      onPaste={cleanPaste}
+      onBlur={e => updateCell(props, e, targetProperty)}
+      style={props.style}
+    />
+  )
+}
+
+export { CellBool, CellTypeSelect, CellText, CellTextArea }

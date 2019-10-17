@@ -7,9 +7,9 @@ import { items } from './definition'
 import { saveProjects } from './save'
 import DnDTypes from './DnDTypes'
 import Title from './Title'
-import { CellBool, CellTypeSelect, CellText } from './Cells.js'
+import { CellBool, CellTypeSelect, CellText, CellTextArea } from './Cells.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash ,faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import './Table.scss'
 
 function find(projects, projectId, tableId) {
@@ -21,7 +21,7 @@ function Table(props) {
   const { projectId, tableId } = useParams()
   const table = find(projects, projectId, tableId)
 
-  const setColumns = (newColumns) => {
+  const setColumns = newColumns => {
     const pjs = projects.slice()
     const pjIndex = pjs.findIndex(e => e.id === projectId)
     const tableIndex = pjs[pjIndex].tables.findIndex(e => e.id === tableId)
@@ -30,28 +30,36 @@ function Table(props) {
     saveProjects(pjs)
   }
 
+  const setTableName = event => {
+    const pjs = projects.slice()
+    const pjIndex = pjs.findIndex(e => e.id === projectId)
+    const tableIndex = pjs[pjIndex].tables.findIndex(e => e.id === tableId)
+    pjs[pjIndex].tables[tableIndex].name = event.target.value
+    setProjects(pjs)
+    saveProjects(pjs)
+  }
+
   const p = {
-    table:table,
+    table: table,
     columns: table.columns,
-    setColumns:setColumns
+    setColumns: setColumns,
   }
 
   return (
     <div className="Table">
       <Title />
-      <DndProvider backend={HTML5Backend}>
-        <div className="Table-title">
-          <Link style={{ textDecoration: 'none' }} to={`/${projectId}`}>
-            {table.name}
-          </Link>
-        </div>
-        <table className="Table-content">
-          <Header />
+      <Link className="back" to={`/${projectId}`}>
+        戻る
+      </Link>
+      <input className="Table-name" value={table.name} onChange={setTableName} />
+      <table className="Table-content">
+        <Header />
+        <DndProvider backend={HTML5Backend}>
           <Rows {...p} />
-          <NewLineAdd {...p} />
-        </table>
-        <Info columns={table.columns} />
-      </DndProvider>
+        </DndProvider>
+        <NewLineAdd {...p} />
+      </table>
+      <Info columns={table.columns} />
     </div>
   )
 }
@@ -139,7 +147,15 @@ function Row(props) {
     <tr ref={ref} style={{ backgroundColor: isDragging ? '#eee' : '#fff' }}>
       <td>{props.rowNo + 1}</td>
       {items.map((item, i) => (
-        <Cell key={item.id} rowid={props.rowid} itemid={item.id} type={item.type} content={r[item.id]} {...props} />
+        <Cell
+          key={item.id}
+          rowid={props.rowid}
+          itemid={item.id}
+          type={item.type}
+          content={r[item.id]}
+          style={item.style}
+          {...props}
+        />
       ))}
       <td className="del" onClick={del} style={{ visibility: isDragging ? 'hidden' : 'visible', color: '#808080' }}>
         <FontAwesomeIcon icon={faTrash} />
@@ -148,13 +164,15 @@ function Row(props) {
   )
 }
 
-function Cell(prop) {
-  if (prop.type === 'bool') {
-    return <CellBool {...prop} />
-  } else if (prop.type === 'type-select') {
-    return <CellTypeSelect {...prop} />
+function Cell(props) {
+  if (props.type === 'bool') {
+    return <CellBool {...props} />
+  } else if (props.type === 'type-select') {
+    return <CellTypeSelect {...props} />
+  } else if (props.type === 'textarea') {
+    return <CellTextArea {...props} />
   } else {
-    return <CellText {...prop} />
+    return <CellText {...props} />
   }
 }
 
@@ -169,7 +187,8 @@ function NewLineAdd(prop) {
     <tfoot className="App-addrow">
       <tr>
         <td colSpan={items.length + 1} onClick={addRow}>
-          ここをクリックしてね
+        <FontAwesomeIcon className="button" icon={faPlusCircle} />
+          行追加
         </td>
       </tr>
     </tfoot>

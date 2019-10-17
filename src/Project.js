@@ -48,7 +48,7 @@ const Project = props => {
             </li>
           ))}
         </ul>
-        <form>
+        <form onSubmit={addNewTable}>
           新規テーブル名
           <input id="new-table" autoComplete="off" />
           <button type="button" onClick={addNewTable}>

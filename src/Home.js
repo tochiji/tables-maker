@@ -10,17 +10,19 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 const Home = props => {
   const projects = props.projects
   const setProjects = props.setProjects
-  const addNewProject = () => {
+  const addNewProject = (e) => {
+    e.preventDefault()
     const name = document.getElementById('new-project').value
     if (name === '') return
     const newpj = projects.slice()
-    newpj.push({
+    newpj.unshift({
       id: shortid.generate(),
       name: name,
       tables: [],
     })
     setProjects(newpj)
     saveProjects(newpj)
+    document.getElementById('new-project').value = "";
   }
   return (
     <div className="Home">
@@ -36,7 +38,7 @@ const Home = props => {
             </li>
           ))}
           <li className="add">
-            <form>
+            <form onSubmit={addNewProject}>
               <div>新規プロジェクト名</div>
               <input id="new-project" name={shortid.generate()} />
               <div className="button-container">

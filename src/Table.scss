@@ -6,64 +6,92 @@
 
   width: 100%;
   font-weight: 600;
+
+  .back {
+    margin-top: 20px;
+    margin-left: 2.5%;
+    align-self: start;
+  }
 }
 
-.Table-title{
-  width: 95%;
+.Table-name {
+  width: 40%;
   text-align: left;
-  margin: 10px 0;
-  font-size: 1.3rem;
+  margin: 10px 2.5%;
+  font-size: 1.5rem;
   font-weight: bold;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  align-self: start;
 }
 
-
-.Table-content{
+.Table-content {
   width: 95%;
   font-size: 0.8rem;
   border-collapse: collapse;
 
-  th{
-    margin:0;
-    padding:0;
+  th {
+    margin: 0;
+    padding: 0;
     height: 2rem;
     max-width: 100px;
     border-right: 1px solid #c7c7c7;
   }
 
-  td{
-    margin:0;
-    padding:2px 0;
+  td {
+    margin: 0;
+    padding: 2px 0;
     border: 1px solid #c7c7c7;
-    height: 2.0rem;
+    height: 2rem;
     text-align: center;
 
-    &:hover{
+    &:hover {
       background-color: rgb(255, 240, 240);
     }
   }
 
-  td[contenteditable="true"]{
+  td[contenteditable='true'] {
     max-width: 100px;
+    font-weight: normal;
   }
-  td:focus{
-    outline:none;
+  td:focus {
+    outline: none;
   }
 
-  td.select{
+  td.select {
     width: 80px;
   }
 
-  td.del{
-    cursor:pointer;
+  td.del {
+    cursor: pointer;
   }
-  .del{
-    border:none;
+  .del {
+    border: none;
   }
 }
 
-.App-addrow{
+.App-addrow {
   cursor: pointer;
   width: 100%;
+  font-size: 1.0rem;
+  border: none;
+  color: rgb(107, 107, 107);
+
+  td{
+    border: none;
+    border-radius: 0 0 10px 10px;
+    padding: 10px 0 15px;
+    transition: background-color 0.1s;
+    
+    &:hover {
+      background-color: rgb(243, 243, 243);
+    }
+
+    .button{
+      margin-right: 0.2rem;
+    }
+  }
 }
 
 .App-link {
