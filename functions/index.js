@@ -28,12 +28,11 @@ if (process.env.NODE_ENV === 'production') {
   mysqlConfig.socketPath = `/cloudsql/${connectionName}`
 }
 
-let mysqlPool
+const mysqlPool = mysql.createPool(mysqlConfig)
 
 app.get('/users', (req, res) => {
-  if (!mysqlPool) mysqlPool = mysql.createPool(mysqlConfig)
-
-  mysqlPool.query('select * from users', (err, results) => {
+  const query = 'select * from users'
+  mysqlPool.query(query, (err, results) => {
     res.setHeader('Content-Type', 'application/json')
     if (err) {
       console.error(err)
@@ -44,13 +43,63 @@ app.get('/users', (req, res) => {
   })
 })
 
-app.post('/user', (req, res) => {
+app.post('/check/user', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-
-  if (!mysqlPool) mysqlPool = mysql.createPool(mysqlConfig)
-
   const name = req.body.name
-  mysqlPool.query(`INSERT INTO users (name) VALUES('${name}');`, (err, results) => {
+
+  if (name === undefined || name == null || name === '') {
+    const result = { error: 'name error' }
+    res.status(500).send(JSON.stringify(result))
+  } else if (name.length <= 3) {
+    const result = { error: 'too short name' }
+    res.status(500).send(JSON.stringify(result))
+  }
+
+  const query = `select CASE WHEN count(id) > 0 
+                    THEN "true"
+                    ELSE "false"
+                    END as UserExists
+                from users
+                where name = '${name}';`
+
+  mysqlPool.query(query, (err, results) => {
+    res.setHeader('Content-Type', 'application/json')
+    if (err) {
+      console.error(err)
+      res.status(500).send(err)
+    } else {
+      res.status(200).send(JSON.stringify(results))
+    }
+  })
+})
+
+app.post('/input/user', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  const name = req.body.name
+  const query = `INSERT INTO users (name) VALUES('${name}');`
+
+  mysqlPool.query(query, (err, results) => {
+    res.setHeader('Content-Type', 'application/json')
+    if (err) {
+      console.error(err)
+      res.status(500).send(err)
+    } else {
+      res.status(200).send(JSON.stringify(results))
+    }
+  })
+})
+
+app.post('/input/project', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  const name = req.body.name
+  const tables = JSON.stringify(req.body.tables)
+  const query = `INSERT INTO projects (name, tables)
+                  VALUES (
+                    '${name}',
+                    '${tables}'
+                  );`
+
+  mysqlPool.query(query, (err, results) => {
     res.setHeader('Content-Type', 'application/json')
     if (err) {
       console.error(err)
