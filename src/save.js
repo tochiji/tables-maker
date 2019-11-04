@@ -1,19 +1,39 @@
-function save(data){
-  window.localStorage.setItem('table',JSON.stringify(data))
+function saveProjects(projects) {
+  window.localStorage.setItem('projects', JSON.stringify(projects))
 }
 
-function saveProjects(data){
-  window.localStorage.setItem('projects',JSON.stringify(data))
+function saveProject(project) {
+  const url = 'https://us-central1-pivotal-keep-256007.cloudfunctions.net/api/input/project'
+  console.log(project)
+  try {
+    fetch(url, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(project),
+    })
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-function load(){
-  const data = window.localStorage.getItem('table')
-  return JSON.parse(data)
+async function loadProjects() {
+  const url = 'https://us-central1-pivotal-keep-256007.cloudfunctions.net/api/projects'
+  try {
+    const result = await fetch(url)
+    const json = await result.json()
+    // JSONの中にあるJSONをパースしてObjectにする
+    json.forEach(pj => {
+      pj.id = pj.id.toString()
+      pj.tables = JSON.parse(pj.tables)
+    })
+    return json
+  } catch (e) {
+    const data = window.localStorage.getItem('projects')
+    return JSON.parse(data)
+  }
 }
 
-function loadProjects(){
-  const data = window.localStorage.getItem('projects')
-  return JSON.parse(data)
-}
-
-export {save, saveProjects, load, loadProjects}
+export { saveProjects, saveProject, loadProjects }

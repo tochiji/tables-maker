@@ -1,7 +1,8 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import shortid from 'shortid'
-import { saveProjects } from './save'
+import { saveProjects, saveProject } from './save'
+import Loading from './Loading'
 import Title from './Title'
 import './Project.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,6 +12,14 @@ const Project = props => {
   const { projects, setProjects } = props
   const { projectId } = useParams()
   const project = find(projects, projectId)
+  if (project === undefined) {
+    return (
+      <div className="Project">
+        <Title />
+        <Loading />
+      </div>
+    )
+  }
 
   const addNewTable = e => {
     e.preventDefault()
@@ -26,7 +35,8 @@ const Project = props => {
     })
     setProjects(pjs)
     saveProjects(pjs)
-    document.getElementById('new-table').value = ""
+    saveProject(pjs[index])
+    document.getElementById('new-table').value = ''
   }
 
   return (

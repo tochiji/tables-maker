@@ -4,22 +4,37 @@ import { Link, useParams } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
 import shortid from 'shortid'
 import { items } from './definition'
-import { saveProjects } from './save'
+import { saveProjects, saveProject } from './save'
 import DnDTypes from './DnDTypes'
 import Title from './Title'
+import Loading from './Loading'
 import { CellBool, CellTypeSelect, CellText, CellTextArea } from './Cell'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash ,faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import './Table.scss'
 
 function find(projects, projectId, tableId) {
-  return projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
+  console.log(projects)
+  try{
+    return projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
+  } catch {
+    return null
+  }
 }
 
 function Table(props) {
   const { projects, setProjects } = props
   const { projectId, tableId } = useParams()
   const table = find(projects, projectId, tableId)
+  
+  if(table === null){
+    return (
+      <div className="Project">
+        <Title />
+        <Loading />
+      </div>
+    )
+  }
 
   const setColumns = newColumns => {
     const pjs = projects.slice()
@@ -28,6 +43,7 @@ function Table(props) {
     pjs[pjIndex].tables[tableIndex].columns = newColumns
     setProjects(pjs)
     saveProjects(pjs)
+    saveProject(pjs[pjIndex])
   }
 
   const setTableName = event => {
@@ -36,7 +52,7 @@ function Table(props) {
     const tableIndex = pjs[pjIndex].tables.findIndex(e => e.id === tableId)
     pjs[pjIndex].tables[tableIndex].name = event.target.value
     setProjects(pjs)
-    saveProjects(pjs)
+    saveProject(pjs[pjIndex])
   }
 
   const p = {
@@ -187,7 +203,7 @@ function NewLineAdd(prop) {
     <tfoot className="App-addrow">
       <tr>
         <td colSpan={items.length + 1} onClick={addRow}>
-        <FontAwesomeIcon className="button" icon={faPlusCircle} />
+          <FontAwesomeIcon className="button" icon={faPlusCircle} />
           行追加
         </td>
       </tr>

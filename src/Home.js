@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import shortid from 'shortid'
-import { saveProjects } from './save'
+import { saveProjects, saveProject } from './save'
 import Title  from './Title'
 import './Home.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,14 +14,16 @@ const Home = props => {
     e.preventDefault()
     const name = document.getElementById('new-project').value
     if (name === '') return
-    const newpj = projects.slice()
-    newpj.unshift({
+    const pjs = projects.slice()
+    const newpj = {
       id: shortid.generate(),
       name: name,
       tables: [],
-    })
-    setProjects(newpj)
-    saveProjects(newpj)
+    }
+    pjs.unshift(newpj)
+    setProjects(pjs)
+    saveProjects(pjs)
+    saveProject(newpj)
     document.getElementById('new-project').value = "";
   }
   return (

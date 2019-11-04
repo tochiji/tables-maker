@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { load, loadProjects } from './save'
+import { loadProjects } from './save'
 import Home from './Home'
 import Project from './Project'
 import Table from './Table'
+import NotFound from './404'
 
 const App = () => {
-  const saved = load() || []
-  const savedProjects = loadProjects() || []
-  const [projects, setProjects] = useState(savedProjects)
-  const [table, setTable] = useState(saved)
+  const [projects, setProjects] = useState([])
+  useEffect(() => {
+    async function fetchData() {
+      const projects = await loadProjects()
+      setProjects(projects)
+    }
+    fetchData();
+  },[])
   const state = {
     projects: projects,
-    setProjects: setProjects,
-    table: table,
-    setTable: setTable,
+    setProjects: setProjects
   }
 
   return (
@@ -29,6 +32,7 @@ const App = () => {
         <Route path="/:projectId">
           <Project {...state} />
         </Route>
+        <Route component={NotFound} />
       </Switch>
     </Router>
   )

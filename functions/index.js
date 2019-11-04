@@ -2,15 +2,34 @@ const process = require('process') // Allow env variable mocking
 const mysql = require('mysql')
 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
 
+app.use(cors())
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 )
 app.use(bodyParser.json())
+
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, access_token'
+  )
+
+  // intercept OPTIONS method
+  if (req.method === 'OPTIONS') {
+    res.send(200)
+  } else {
+    next()
+  }
+}
+app.use(allowCrossDomain)
 
 const connectionName = process.env.INSTANCE_CONNECTION_NAME
 const dbUser = process.env.SQL_USER
@@ -110,9 +129,26 @@ app.post('/input/project', (req, res) => {
   })
 })
 
-app.get('/test', (req, res) => {
+app.get('/projects', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-  res.status(200).send({ message: 'testです' })
+  const query = `select t1.id,t1.name,t2.tables
+                 from (SELECT name,max(id) as id
+                 FROM projects
+                 GROUP BY name) as t1
+                 JOIN projects as t2
+                  ON t1.id = t2.id
+                 ORDER BY id desc;
+                 `
+
+  mysqlPool.query(query, (err, results) => {
+    res.setHeader('Content-Type', 'application/json')
+    if (err) {
+      console.error(err)
+      res.status(500).send(err)
+    } else {
+      res.status(200).send(JSON.stringify(results))
+    }
+  })
 })
 
 module.exports = { api: app }
