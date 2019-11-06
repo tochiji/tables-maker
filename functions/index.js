@@ -41,6 +41,10 @@ const mysqlConfig = {
   user: dbUser,
   password: dbPassword,
   database: dbName,
+  connectTimeout: 10000,
+  acquireTimeout: 10000,
+  waitForConnections: true,
+  queueLimit: 0
 }
 
 if (process.env.NODE_ENV === 'production') {

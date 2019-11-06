@@ -8,7 +8,19 @@
   font-weight: 600;
 }
 
-.Project-content{
+.Project-title {
+  margin-left: 20px;
+  align-self: flex-start;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  transition: background-color 0.1s;
+
+  &:hover {
+    background-color: rgb(240, 240, 240);
+  }
+}
+
+.Project-content {
   padding-top: 10px;
   width: 100%;
 
@@ -17,15 +29,23 @@
   align-items: center;
   flex-direction: column;
 
-  .table-list{
+  .table-list {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .table-list-title {
     font-size: 1.7rem;
   }
 
-  ul{
+  ul {
     width: 90%;
   }
 
-  li{
+  li {
     padding-left: 15px;
     height: 3.5rem;
     background-color: #fff;
@@ -36,42 +56,50 @@
     transition: box-shadow 0.1s;
     list-style-type: none;
 
-    a{
+    a {
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-direction: row;
-      
+
       width: 100%;
       height: 100%;
     }
 
     &:hover {
-      transform: translate(-1px,-1px);
+      transform: translate(-1px, -1px);
       box-shadow: 2px 2px 5px rgb(221, 221, 221);
     }
   }
 
-  li+li{
+  li + li {
     margin-top: 10px;
   }
 
-  span+span{
+  span + span {
     margin-left: 20px;
   }
 
-  .column-count{
+  .column-count {
     color: rgb(160, 160, 160);
   }
+}
 
-  form{
-    width: 90%;
-    margin-top: 15px;
-  }
-  input{
+.newtable-input {
+  width: 90%;
+  margin-top: 15px;
+
+  form {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  input {
+    width: 95%;
     margin-top: 10px;
-    padding: 0 10px;
+    padding-left: 10px;
     height: 3rem;
     font-size: 1.5rem;
     font-weight: 600;
@@ -80,16 +108,28 @@
     border: none;
     border-bottom: 1px solid rgb(202, 202, 202);
   }
+  .button {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 3rem;
+    transition: color 0.2s;
+    color: #d8d8d8;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff7300;
+    }
+  }
 }
 
-.Project-title{
-  margin-left: 20px;
-  align-self: flex-start;
-  padding: 5px 10px;
-  font-size: 1.2rem;
-  transition: background-color 0.1s;
+.er-diagram {
+  width: 90%;
+  margin-top: 20px;
+  height: 500px;
 
-  &:hover{
-    background-color: rgb(240, 240, 240);
+  svg {
+    background-image: linear-gradient(rgb(196, 196, 196) 1px, transparent 0),
+                      linear-gradient(90deg, rgb(197, 197, 197) 1px, transparent 0);
+    background-size: 200px 20px, 20px 20px, 10px 10px,
   }
 }
