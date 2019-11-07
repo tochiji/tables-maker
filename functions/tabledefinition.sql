@@ -1,8 +1,9 @@
 CREATE TABLE projects (
-  id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  row mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  id varchar(20) NOT NULL,
   name varchar(200) NOT NULL,
   tables json DEFAULT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (row)
 );
 
 INSERT INTO projects (name, tables)

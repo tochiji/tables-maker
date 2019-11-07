@@ -114,10 +114,12 @@ app.post('/input/user', (req, res) => {
 
 app.post('/input/project', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
+  const id = req.body.id
   const name = req.body.name
   const tables = JSON.stringify(req.body.tables)
-  const query = `INSERT INTO projects (name, tables)
+  const query = `INSERT INTO projects (id, name, tables)
                   VALUES (
+                    '${id}',
                     '${name}',
                     '${tables}'
                   );`
@@ -135,13 +137,13 @@ app.post('/input/project', (req, res) => {
 
 app.get('/projects', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-  const query = `select t1.id,t1.name,t2.tables
-                 from (SELECT name,max(id) as id
+  const query = `select t1.row,t1.id,t1.name,t2.tables
+                 from (SELECT id,name,max(row) as row
                  FROM projects
-                 GROUP BY name) as t1
+                 GROUP BY id,name) as t1
                  JOIN projects as t2
-                  ON t1.id = t2.id
-                 ORDER BY id desc;
+                  ON t1.row = t2.row
+                 ORDER BY row desc;
                  `
 
   mysqlPool.query(query, (err, results) => {
