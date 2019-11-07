@@ -65,17 +65,43 @@ const NewTableInput = props => {
 
 const ErDiagram = props => {
   const { project, projects, projectId, setProjects } = props
+  const substr = word => {
+    if (word.length >= 11) {
+      return word.substr(0, 10) + '...'
+    }
+    return word
+  }
 
   return (
     <div className="er-diagram">
       <div className="er-diagram-title">ER図</div>
-      <svg width="100%" height="800" viewBox="0, 0, 400, 800">
-        {project.tables.map((v,i) => (
-          <g key={v.id}>
-            <rect y={i*100} width="100" height={(v.columns.length+1)*30} strokeWidth="1" stroke="#000" fill="#000" draggable="true"></rect>
-            <text y={i*30 + 30}>{v.name}</text>
-          </g>
-        ))}
+      <svg width="1300px" height="800px" viewBox="0,0,1300,800">
+        {project.tables.map((v, i) => {
+          return (
+            <g key={v.id}>
+              <text x={21 + 250 * i} y={32}>
+                {v.name}
+              </text>
+              <rect
+                x={20 + 250 * i}
+                y={40}
+                rx="3"
+                ry="3"
+                width="160"
+                height={(v.columns.length + 1) * 30}
+                strokeWidth="1"
+                stroke="#000"
+                fill="#fff"
+                draggable="true"
+              ></rect>
+              {v.columns.map((c, i2) => (
+                <text className="columnName" x={30 + 250 * i} y={65 + i2 * 24} key={c.id}>
+                  {substr(c.data.name)}
+                </text>
+              ))}
+            </g>
+          )
+        })}
       </svg>
     </div>
   )

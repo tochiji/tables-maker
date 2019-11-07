@@ -125,11 +125,26 @@
 .er-diagram {
   width: 90%;
   margin-top: 20px;
-  height: 500px;
+  height: 1000px;
+  overflow: scroll;
 
   svg {
-    background-image: linear-gradient(rgb(196, 196, 196) 1px, transparent 0),
-                      linear-gradient(90deg, rgb(197, 197, 197) 1px, transparent 0);
-    background-size: 200px 20px, 20px 20px, 10px 10px,
+    border: 1px solid rgb(104, 104, 104);
+    background-image: linear-gradient(rgb(226, 226, 226) 1px, transparent 0),
+      linear-gradient(90deg, rgb(228, 228, 228) 1px, transparent 0);
+    background-size: 100px 10px, 10px 10px, 5px 5px;
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+
+  rect {
+    cursor: move;
+    &:hover{
+      opacity: 0.7;
+    }
+  }
+  
+  .columnName{
+    font-size: 0.8rem;
   }
 }
