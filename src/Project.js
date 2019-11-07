@@ -55,7 +55,7 @@ const NewTableInput = props => {
   return (
     <div className="newtable-input">
       <div>新規テーブル名</div>
-      <form>
+      <form onSubmit={addNewTable}>
         <input id="new-table" autoComplete="off" />
         <FontAwesomeIcon className="button" icon={faPlusCircle} onClick={addNewTable} />
       </form>
