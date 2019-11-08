@@ -66,6 +66,7 @@ const NewTableInput = props => {
 const ErDiagram = props => {
   const { project, projects, projectId, setProjects } = props
   const substr = word => {
+    if(word === undefined || word == null) return "";
     if (word.length >= 11) {
       return word.substr(0, 10) + '...'
     }

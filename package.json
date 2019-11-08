@@ -19,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "PROJECT_ID=pivotal-keep-256007 IMAGE=table-maker docker build -t gcr.io/${PROJECT_ID}/${IMAGE} .;gcloud docker -- push gcr.io/${PROJECT_ID}/${IMAGE}"
   },
   "eslintConfig": {
     "extends": "react-app"
