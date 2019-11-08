@@ -66,7 +66,7 @@ const NewTableInput = props => {
 const ErDiagram = props => {
   const { project, projects, projectId, setProjects } = props
   const substr = word => {
-    if(word === undefined || word == null) return "";
+    if (word === undefined || word == null) return ''
     if (word.length >= 11) {
       return word.substr(0, 10) + '...'
     }
@@ -78,25 +78,28 @@ const ErDiagram = props => {
       <div className="er-diagram-title">ER図</div>
       <svg width="1300px" height="800px" viewBox="0,0,1300,800">
         {project.tables.map((v, i) => {
+          const tableXwidth = 200
+          const textHeight = 24
+
           return (
             <g key={v.id}>
-              <text x={21 + 250 * i} y={32}>
+              <text x={21 + tableXwidth * i} y={32}>
                 {v.name}
               </text>
               <rect
-                x={20 + 250 * i}
+                x={20 + tableXwidth * i}
                 y={40}
                 rx="3"
                 ry="3"
                 width="160"
-                height={(v.columns.length + 1) * 30}
+                height={(v.columns.length + 1) * textHeight}
                 strokeWidth="1"
                 stroke="#000"
                 fill="#fff"
                 draggable="true"
               ></rect>
               {v.columns.map((c, i2) => (
-                <text className="columnName" x={30 + 250 * i} y={65 + i2 * 24} key={c.id}>
+                <text className="columnName" x={30 + tableXwidth * i} y={66 + i2 * textHeight} key={c.id}>
                   {substr(c.data.name)}
                 </text>
               ))}

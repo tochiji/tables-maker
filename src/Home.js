@@ -48,12 +48,12 @@ const Home = props => {
               </div>
             </form>
           </li>
-          {projects.length % 3 === 0 || projects.length <= 2 ? null : (
+          {projects.length !== 0 ? (
             <>
               <li className="space" />
               <li className="space" />
             </>
-          )}
+          ) : null}
         </ul>
       </div>
     </div>
