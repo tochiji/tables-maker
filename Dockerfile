@@ -1,5 +1,5 @@
 FROM node:10
-WORKDIR /Users/hj1251/Desktop/github/tables-maker
+WORKDIR /Users/Yosi/Desktop/github/tables-maker
 COPY package*.json ./
 RUN npm install
 
