@@ -15,7 +15,7 @@ import './Table.scss'
 
 function find(projects, projectId, tableId) {
   console.log(projects)
-  try{
+  try {
     return projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
   } catch {
     return null
@@ -26,8 +26,8 @@ function Table(props) {
   const { projects, setProjects } = props
   const { projectId, tableId } = useParams()
   const table = find(projects, projectId, tableId)
-  
-  if(table === null){
+
+  if (table === null) {
     return (
       <div className="Project">
         <Title />
@@ -75,23 +75,23 @@ function Table(props) {
         </DndProvider>
         <NewLineAdd {...p} />
       </table>
-      <Info columns={table.columns} />
     </div>
   )
 }
 
 function Header(prop) {
+  const noStyle = { backgroundColor: '#666', color: '#fff', width: '40px' }
   const style = { backgroundColor: '#666', color: '#fff' }
   return (
     <thead>
       <tr>
-        <th style={style}>No</th>
+        <th style={noStyle}>No</th>
         {items.map(v => (
           <th key={v.id} style={style}>
             {v.name}
           </th>
         ))}
-        <th className="del" style={{ backgroundColor: 'transparent' }} />
+        <th className="del" style={{ backgroundColor: 'transparent', width: '40px' }} />
       </tr>
     </thead>
   )
@@ -160,8 +160,8 @@ function Row(props) {
   }
   const r = props.row.data
   return (
-    <tr ref={ref} style={{ backgroundColor: isDragging ? '#eee' : '#fff' }}>
-      <td>{props.rowNo + 1}</td>
+    <tr ref={ref} style={{ backgroundColor: isDragging ? '#eee' : 'transparent' }}>
+      <td style={{ backgroundColor: '#fff' }}>{props.rowNo + 1}</td>
       {items.map((item, i) => (
         <Cell
           key={item.id}
@@ -169,11 +169,11 @@ function Row(props) {
           itemid={item.id}
           type={item.type}
           content={r[item.id]}
-          style={item.style}
+          style={{ padding: "5px 4px", backgroundColor: '#fff', ...item.style }}
           {...props}
         />
       ))}
-      <td className="del" onClick={del} style={{ visibility: isDragging ? 'hidden' : 'visible', color: '#808080' }}>
+      <td className="del" onClick={del} style={{ backgroundColor: 'transparent', color: '#808080' }}>
         <FontAwesomeIcon icon={faTrash} />
       </td>
     </tr>
@@ -208,18 +208,6 @@ function NewLineAdd(prop) {
         </td>
       </tr>
     </tfoot>
-  )
-}
-
-function Info(prop) {
-  const PKcount = prop.columns.filter(v => {
-    return v.data.ispk
-  }).length
-  return (
-    <div style={{ marginTop: '50px' }}>
-      <div>{prop.columns.length + '行あるよ'}</div>
-      <div>{'PKは' + PKcount + '個あるよ'}</div>
-    </div>
   )
 }
 
