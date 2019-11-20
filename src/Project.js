@@ -7,7 +7,7 @@ import Title from './Title'
 import './Project.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTable, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-
+ 
 const TableList = props => {
   const { project, projectId } = props
 
