@@ -137,13 +137,13 @@ app.post('/input/project', (req, res) => {
 
 app.get('/projects', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
-  const query = `select t1.row,t1.id,t1.name,t2.tables
-                 from (SELECT id,name,max(row) as row
-                 FROM projects
-                 GROUP BY id,name) as t1
-                 JOIN projects as t2
+  const query = `select t1.row,t1.id,t2.name,t2.tables 
+                  from (SELECT id,max(row) as row
+                        FROM projects
+                        GROUP BY id) as t1
+                  JOIN projects as t2
                   ON t1.row = t2.row
-                 ORDER BY row desc;
+                  ORDER BY row desc;
                  `
 
   mysqlPool.query(query, (err, results) => {

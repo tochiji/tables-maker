@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import shortid from 'shortid'
-import { saveProjects, saveProject } from './save'
+import { changeProjectName, addTable, delTable } from './updates'
 import Loading from './Loading'
 import Title from './Title'
 import './Project.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTable, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
- 
+import { faTrash, faTable, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+
 const TableList = props => {
-  const { project, projectId } = props
+  const { projects, project, projectId, setProjects } = props
+  const [modal, setModal] = useState(false)
 
   return (
     <div className="table-list">
@@ -24,6 +24,17 @@ const TableList = props => {
               <span>{v.name}</span>
               <span className="column-count">{v.columns.length}つのカラムがあります</span>
             </Link>
+            <div className="del" onClick={() => setModal(v.id)} modalopen={(modal === v.id).toString()}>
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
+            <div className="delcheck" modalopen={(modal === v.id).toString()}>
+              <div className="confirm-del" onClick={() => delTable(projects, projectId, v.id, setProjects)}>
+                削除
+              </div>
+              <div className="cancel" onClick={() => setModal(false)}>
+                削除しない
+              </div>
+            </div>
           </li>
         ))}
       </ul>
@@ -38,17 +49,7 @@ const NewTableInput = props => {
     e.preventDefault()
     const name = document.getElementById('new-table').value
     if (name === '') return
-    const pjs = projects.slice()
-    const index = pjs.findIndex(e => e.id === projectId)
-    pjs[index].tables = pjs[index].tables || []
-    pjs[index].tables.push({
-      id: shortid.generate(),
-      name: name,
-      columns: [],
-    })
-    setProjects(pjs)
-    saveProjects(pjs)
-    saveProject(pjs[index])
+    addTable(projects, projectId, name, setProjects)
     document.getElementById('new-table').value = ''
   }
 
@@ -112,7 +113,7 @@ const ErDiagram = props => {
 }
 
 const Project = props => {
-  const { projects } = props
+  const { projects, setProjects } = props
   const { projectId } = useParams()
   const project = find(projects, projectId)
 
@@ -131,7 +132,12 @@ const Project = props => {
           <Link className="Project-title" to="/">
             {project.name}
           </Link>
-          <TableList project={project} projectId={projectId} />
+          <input
+            className="Project-name"
+            value={project.name}
+            onChange={e => changeProjectName(projects, projectId, e.target.value, setProjects)}
+          />
+          <TableList project={project} projectId={projectId} {...props} />
           <NewTableInput projectId={projectId} {...props} />
           <ErDiagram project={project} projectId={projectId} {...props} />
         </div>
