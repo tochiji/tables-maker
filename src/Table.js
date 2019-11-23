@@ -2,9 +2,8 @@ import React, { useCallback, useRef } from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link, useParams } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
-import shortid from 'shortid'
 import { items } from './definition'
-import { setTableName as st, setColumns as sc } from './updates'
+import { setTableName as st, setColumns as sc, addTableRow, delTableRow } from './updates'
 import DnDTypes from './DnDTypes'
 import Title from './Title'
 import Loading from './Loading'
@@ -47,7 +46,10 @@ function Table(props) {
   const p = {
     table: table,
     columns: table.columns,
-    setColumns: setColumns,
+    setColumns,
+    projectId,
+    tableId,
+    ...props,
   }
 
   return (
@@ -141,11 +143,8 @@ function Row(props) {
   drag(drop(ref))
 
   const del = () => {
-    const columns = props.columns.slice()
-    const newColumns = columns.filter(r => {
-      return r.id !== props.rowid
-    })
-    props.setColumns(newColumns)
+    const {projects, projectId, tableId, rowid, setProjects} = props
+    delTableRow(projects, projectId, tableId, rowid, setProjects)
   }
   const r = props.row.data
   return (
@@ -181,11 +180,10 @@ function Cell(props) {
   }
 }
 
-function NewLineAdd(prop) {
+function NewLineAdd(props) {
   const addRow = () => {
-    const columns = prop.columns.slice()
-    columns.push({ id: shortid.generate(), data: {} })
-    prop.setColumns(columns)
+    const { projects, projectId, tableId, setProjects } = props
+    addTableRow(projects, projectId, tableId, setProjects)
   }
 
   return (
