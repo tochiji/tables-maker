@@ -4,7 +4,6 @@ function saveProjects(projects) {
 
 function saveProject(project) {
   const url = 'https://us-central1-pivotal-keep-256007.cloudfunctions.net/api/input/project'
-  console.log(project)
   try {
     fetch(url, {
       method: 'POST',

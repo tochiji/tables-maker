@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
 import shortid from 'shortid'
 import { items } from './definition'
-import { saveProjects, saveProject } from './save'
+import { setTableName as st, setColumns as sc } from './updates'
 import DnDTypes from './DnDTypes'
 import Title from './Title'
 import Loading from './Loading'
@@ -14,7 +14,6 @@ import { faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import './Table.scss'
 
 function find(projects, projectId, tableId) {
-  console.log(projects)
   try {
     return projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
   } catch {
@@ -36,23 +35,13 @@ function Table(props) {
     )
   }
 
-  const setColumns = newColumns => {
-    const pjs = projects.slice()
-    const pjIndex = pjs.findIndex(e => e.id === projectId)
-    const tableIndex = pjs[pjIndex].tables.findIndex(e => e.id === tableId)
-    pjs[pjIndex].tables[tableIndex].columns = newColumns
-    setProjects(pjs)
-    saveProjects(pjs)
-    saveProject(pjs[pjIndex])
+  const setTableName = event => {
+    const newTableName = event.target.value
+    st(projects, projectId, tableId, newTableName, setProjects)
   }
 
-  const setTableName = event => {
-    const pjs = projects.slice()
-    const pjIndex = pjs.findIndex(e => e.id === projectId)
-    const tableIndex = pjs[pjIndex].tables.findIndex(e => e.id === tableId)
-    pjs[pjIndex].tables[tableIndex].name = event.target.value
-    setProjects(pjs)
-    saveProject(pjs[pjIndex])
+  const setColumns = newColumns => {
+    sc(projects, projectId, tableId, newColumns, setProjects)
   }
 
   const p = {
@@ -169,7 +158,7 @@ function Row(props) {
           itemid={item.id}
           type={item.type}
           content={r[item.id]}
-          style={{ padding: "5px 4px", backgroundColor: '#fff', ...item.style }}
+          style={{ padding: '5px 4px', backgroundColor: '#fff', ...item.style }}
           {...props}
         />
       ))}
