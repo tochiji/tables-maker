@@ -25,7 +25,7 @@ function addTable(projects, projectId, tableName, setProjects) {
   pjs[pjIndex].tables.push({
     id: shortid.generate(),
     name: tableName,
-    columns: [],
+    rows: [],
   })
   save(pjs, pjIndex, setProjects)
 }
@@ -34,6 +34,25 @@ function delTable(projects, projectId, tableId, setProjects) {
   const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
   pjs[pjIndex].tables = pjs[pjIndex].tables.filter(v => v.id !== tableId)
   save(pjs, pjIndex, setProjects)
+}
+
+function tmpFunctionForChangeDataStructure(projects, projectId, setProjects) {
+  const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
+  console.log(pjs[pjIndex])
+  pjs[pjIndex].tables.forEach((v, i) => {
+    if (pjs[pjIndex].tables[i].rows === undefined) {
+      pjs[pjIndex].tables[i].rows = pjs[pjIndex].tables[i].columns
+      save(pjs, pjIndex, setProjects)
+    }
+    if (pjs[pjIndex].tables[i].columns !== undefined) {
+      delete pjs[pjIndex].tables[i].columns
+      save(pjs, pjIndex, setProjects)
+    }
+    if (pjs[pjIndex].tables[i].row !== undefined) {
+      delete pjs[pjIndex].tables[i].row
+      save(pjs, pjIndex, setProjects)
+    }
+  })
 }
 
 function getTableIndex(pjs, pjIndex, tableId) {
@@ -54,10 +73,10 @@ function setLogicalTableName(projects, projectId, tableId, logicalTableName, set
   save(pjs, pjIndex, setProjects)
 }
 
-function setColumns(projects, projectId, tableId, newColumns, setProjects) {
+function setRows(projects, projectId, tableId, newRows, setProjects) {
   const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
   const tableIndex = getTableIndex(pjs, pjIndex, tableId)
-  pjs[pjIndex].tables[tableIndex].columns = newColumns
+  pjs[pjIndex].tables[tableIndex].rows = newRows
   save(pjs, pjIndex, setProjects)
 }
 
@@ -65,14 +84,14 @@ function addTableRow(projects, projectId, tableId, setProjects) {
   const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
   const tableIndex = getTableIndex(pjs, pjIndex, tableId)
   const newdata = { id: shortid.generate(), data: {} }
-  pjs[pjIndex].tables[tableIndex].columns.push(newdata)
+  pjs[pjIndex].tables[tableIndex].rows.push(newdata)
   save(pjs, pjIndex, setProjects)
 }
 
 function delTableRow(projects, projectId, tableId, rowid, setProjects) {
   const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
   const tableIndex = getTableIndex(pjs, pjIndex, tableId)
-  pjs[pjIndex].tables[tableIndex].columns = pjs[pjIndex].tables[tableIndex].columns.filter(r => r.id !== rowid)
+  pjs[pjIndex].tables[tableIndex].rows = pjs[pjIndex].tables[tableIndex].rows.filter(r => r.id !== rowid)
   save(pjs, pjIndex, setProjects)
 }
 
@@ -82,7 +101,8 @@ export {
   delTable,
   setTableName,
   setLogicalTableName,
-  setColumns,
+  setRows,
   addTableRow,
   delTableRow,
+  tmpFunctionForChangeDataStructure,
 }

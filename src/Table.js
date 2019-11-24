@@ -3,7 +3,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link, useParams } from 'react-router-dom'
 import HTML5Backend from 'react-dnd-html5-backend'
 import { items } from './definition'
-import { setTableName as st, setColumns as sc, addTableRow, delTableRow } from './updates'
+import { setTableName as st, setRows as sc, addTableRow, delTableRow } from './updates'
 import DnDTypes from './DnDTypes'
 import Title from './Title'
 import Loading from './Loading'
@@ -39,14 +39,14 @@ function Table(props) {
     st(projects, projectId, tableId, newTableName, setProjects)
   }
 
-  const setColumns = newColumns => {
-    sc(projects, projectId, tableId, newColumns, setProjects)
+  const setRows = newRows => {
+    sc(projects, projectId, tableId, newRows, setProjects)
   }
 
   const p = {
     table: table,
-    columns: table.columns,
-    setColumns,
+    rows: table.rows,
+    setRows,
     projectId,
     tableId,
     ...props,
@@ -89,23 +89,23 @@ function Header(prop) {
 }
 
 function Rows(props) {
-  const columns = props.columns
+  const rows = props.rows
 
   const moveRow = useCallback(
     (dragIndex, hoverIndex) => {
-      const dragRow = columns[dragIndex]
-      const hoverRow = columns[hoverIndex]
-      const newColumns = columns.slice()
-      newColumns[hoverIndex] = dragRow
-      newColumns[dragIndex] = hoverRow
-      props.setColumns(newColumns)
+      const dragRow = rows[dragIndex]
+      const hoverRow = rows[hoverIndex]
+      const newRows = rows.slice()
+      newRows[hoverIndex] = dragRow
+      newRows[dragIndex] = hoverRow
+      props.setRows(newRows)
     },
-    [props, columns]
+    [props, rows]
   )
 
   return (
     <tbody>
-      {columns.map((r, i) => (
+      {rows.map((r, i) => (
         <Row key={r.id} rowid={r.id} rowNo={i} row={r} moveRow={moveRow} {...props} />
       ))}
     </tbody>

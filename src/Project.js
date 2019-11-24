@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { changeProjectName, addTable, delTable } from './updates'
+import { changeProjectName, addTable, delTable, tmpFunctionForChangeDataStructure } from './updates'
 import Loading from './Loading'
 import Title from './Title'
 import './Project.scss'
@@ -22,7 +22,7 @@ const TableList = props => {
                 <FontAwesomeIcon className="table-icon" icon={faTable} />
               </span>
               <span>{v.name}</span>
-              <span className="column-count">{v.columns.length}つのカラムがあります</span>
+              <span className="column-count">{v.rows.length}つのカラムがあります</span>
             </Link>
             <div className="del" onClick={() => setModal(v.id)} modalopen={(modal === v.id).toString()}>
               <FontAwesomeIcon icon={faTrash} />
@@ -93,13 +93,13 @@ const ErDiagram = props => {
                 rx="3"
                 ry="3"
                 width="160"
-                height={(v.columns.length + 1) * textHeight}
+                height={(v.rows.length + 1) * textHeight}
                 strokeWidth="1"
                 stroke="#000"
                 fill="#fff"
                 draggable="true"
               ></rect>
-              {v.columns.map((c, i2) => (
+              {v.rows.map((c, i2) => (
                 <text className="columnName" x={30 + tableXwidth * i} y={66 + i2 * textHeight} key={c.id}>
                   {substr(c.data.name)}
                 </text>
@@ -116,6 +116,7 @@ const Project = props => {
   const { projects, setProjects } = props
   const { projectId } = useParams()
   const project = find(projects, projectId)
+  tmpFunctionForChangeDataStructure(projects, projectId, setProjects)
 
   if (project === undefined) {
     return (
