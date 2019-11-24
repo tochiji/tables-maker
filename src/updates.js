@@ -38,7 +38,6 @@ function delTable(projects, projectId, tableId, setProjects) {
 
 function tmpFunctionForChangeDataStructure(projects, projectId, setProjects) {
   const { pjs, pjIndex } = ReturnPjAndIndex(projects, projectId)
-  console.log(pjs[pjIndex])
   pjs[pjIndex].tables.forEach((v, i) => {
     if (pjs[pjIndex].tables[i].rows === undefined) {
       pjs[pjIndex].tables[i].rows = pjs[pjIndex].tables[i].columns
