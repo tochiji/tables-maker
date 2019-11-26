@@ -18,6 +18,18 @@ function updateCell(props, e, targetProperty) {
   props.setColumns(newColumns)
 }
 
+function Cell(props) {
+  if (props.type === 'bool') {
+    return <CellBool {...props} />
+  } else if (props.type === 'type-select') {
+    return <CellTypeSelect {...props} />
+  } else if (props.type === 'textarea') {
+    return <CellTextArea {...props} />
+  } else {
+    return <CellText {...props} />
+  }
+}
+
 function CellBool(props) {
   const targetProperty = 'checked'
 
@@ -79,4 +91,4 @@ function CellText(props) {
   )
 }
 
-export { CellBool, CellTypeSelect, CellText, CellTextArea }
+export { Cell }

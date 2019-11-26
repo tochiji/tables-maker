@@ -1,11 +1,41 @@
 import React, { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { changeProjectName, addTable, delTable, tmpFunctionForChangeDataStructure } from './updates'
-import Loading from './Loading'
 import Title from './Title'
 import './Project.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faTable, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+
+const CheckRedirect = (project) => {
+  if (project === undefined) window.location.href = "/"
+}
+
+const Project = props => {
+  const { projects, setProjects } = props
+  const { projectId } = useParams()
+  const project = projects.find(p => p.id === projectId)
+  CheckRedirect(project)
+  tmpFunctionForChangeDataStructure(projects, projectId, setProjects)
+
+  return (
+    <div className="Project">
+      <Title />
+      <div className="Project-content">
+        <Link className="Project-title" to="/">
+          {project.name}
+        </Link>
+        <input
+          className="Project-name"
+          value={project.name}
+          onChange={e => changeProjectName(projects, projectId, e.target.value, setProjects)}
+        />
+        <TableList project={project} projectId={projectId} {...props} />
+        <NewTableInput projectId={projectId} {...props} />
+        <ErDiagram project={project} projectId={projectId} {...props} />
+      </div>
+    </div>
+  )
+}
 
 const TableList = props => {
   const { projects, project, projectId, setProjects } = props
@@ -110,45 +140,6 @@ const ErDiagram = props => {
       </svg>
     </div>
   )
-}
-
-const Project = props => {
-  const { projects, setProjects } = props
-  const { projectId } = useParams()
-  const project = find(projects, projectId)
-  tmpFunctionForChangeDataStructure(projects, projectId, setProjects)
-
-  if (project === undefined) {
-    return (
-      <div className="Project">
-        <Title />
-        <Loading />
-      </div>
-    )
-  } else {
-    return (
-      <div className="Project">
-        <Title />
-        <div className="Project-content">
-          <Link className="Project-title" to="/">
-            {project.name}
-          </Link>
-          <input
-            className="Project-name"
-            value={project.name}
-            onChange={e => changeProjectName(projects, projectId, e.target.value, setProjects)}
-          />
-          <TableList project={project} projectId={projectId} {...props} />
-          <NewTableInput projectId={projectId} {...props} />
-          <ErDiagram project={project} projectId={projectId} {...props} />
-        </div>
-      </div>
-    )
-  }
-}
-
-function find(projects, id) {
-  return projects.find(p => p.id === id)
 }
 
 export default Project

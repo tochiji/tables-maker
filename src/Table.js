@@ -7,23 +7,23 @@ import { setTableName as st, setRows as sc, addTableRow, delTableRow } from './u
 import DnDTypes from './DnDTypes'
 import Title from './Title'
 import Loading from './Loading'
-import { CellBool, CellTypeSelect, CellText, CellTextArea } from './Cell'
+import { Cell } from './Cell'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import './Table.scss'
 
-function find(projects, projectId, tableId) {
-  try {
-    return projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
-  } catch {
-    return null
-  }
+const CheckRedirect = check => {
+  if (check === undefined) window.location.href = '/'
 }
 
 function Table(props) {
   const { projects, setProjects } = props
   const { projectId, tableId } = useParams()
-  const table = find(projects, projectId, tableId)
+  
+  const project = projects.find(p => p.id === projectId)
+  CheckRedirect(project)
+  const table = projects.find(p => p.id === projectId).tables.find(t => t.id === tableId)
+  CheckRedirect(table)
 
   if (table === null) {
     return (
@@ -143,7 +143,7 @@ function Row(props) {
   drag(drop(ref))
 
   const del = () => {
-    const {projects, projectId, tableId, rowid, setProjects} = props
+    const { projects, projectId, tableId, rowid, setProjects } = props
     delTableRow(projects, projectId, tableId, rowid, setProjects)
   }
   const r = props.row.data
@@ -166,18 +166,6 @@ function Row(props) {
       </td>
     </tr>
   )
-}
-
-function Cell(props) {
-  if (props.type === 'bool') {
-    return <CellBool {...props} />
-  } else if (props.type === 'type-select') {
-    return <CellTypeSelect {...props} />
-  } else if (props.type === 'textarea') {
-    return <CellTextArea {...props} />
-  } else {
-    return <CellText {...props} />
-  }
 }
 
 function NewLineAdd(props) {
